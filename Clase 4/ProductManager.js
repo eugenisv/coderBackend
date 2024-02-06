@@ -4,7 +4,7 @@ const dirName = './files'
 const fileName = dirName + '/ejemplo.json'
 if(!fs.existsSync(dirName)) fs.mkdirSync(dirName)
 
-class ProductManager { // gestiona un conjunto de productos
+module.exports = class ProductManager { // gestiona un conjunto de productos
     constructor() {
         this.products = []
         this.path = fileName //debe recibir la ruta a trabajar desde el momento de generar su instancia.
@@ -90,12 +90,14 @@ class Product {
 }
 
 //TESTING
-const productManager = new ProductManager()
-console.log(productManager.getProducts())
-productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnail: 'Sin imagen' , code: 'abc123', stock:25})
-console.log(productManager.getProducts())
-productManager.getProductById(0)
-productManager.getProductById(1)
-productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnail: 'Sin imagen' , code: '123', stock:5})
-productManager.updateProduct(0, 'code', 'NUEVO CÓDIGO')
-productManager.deleteProduct(1)
+// const productManager = new ProductManager()
+// console.log(productManager.getProducts())
+// productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnail: 'Sin imagen' , code: 'abc123', stock:25})
+// console.log(productManager.getProducts())
+// productManager.getProductById(0)
+// productManager.getProductById(1)
+// productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnail: 'Sin imagen' , code: '123', stock:5})
+// productManager.updateProduct(0, 'code', 'NUEVO CÓDIGO')
+// productManager.deleteProduct(1)
+
+
