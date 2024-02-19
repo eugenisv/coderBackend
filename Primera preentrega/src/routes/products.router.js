@@ -7,9 +7,9 @@ const router = Router();
 // crear productos (Base de datos)
 
 const productManager = new ProductManager
-productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnail: 'Sin imagen' , code: 'abc123', stock:25})
+// productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnail: 'Sin imagen' , code: 'abc123', stock:25})
 
-productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnail: 'Sin imagen' , code: '123', stock:5})
+// productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnail: 'Sin imagen' , code: '123', stock:5})
 
 
 router.get('/', (req, res) => {
