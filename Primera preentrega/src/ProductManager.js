@@ -12,18 +12,19 @@ class ProductManager { // gestiona un conjunto de productos
     addProduct (product) {
         this.updateLocal()
         // valida que todos los campos sean obligatorios
-        if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
-            console.error("Todos los campos son obligatorios")
+        if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
+            console.error("Todos los campos excepto thumbnails son obligatorios")
           }
         // valida que no se repita el campo code
         if (this.products.some((p) => p.code === product.code)) {
             console.error('Ya existe un producto con ese código')
           }
-       else { // Debe crearse con in id autoincrementable
-        product.id = this.products.length
-        // agrega un producto al arreglo de productos inicial
-        this.products.push(product)
-        this.updateFile()
+        else { // Debe crearse con in id autoincrementable
+            product.id = this.products.length
+            if(!product.status) product.status = true
+            // agrega un producto al arreglo de productos inicial
+            this.products.push(product)
+            this.updateFile()
        }
     }
     
@@ -79,13 +80,15 @@ class ProductManager { // gestiona un conjunto de productos
 }
 
 class Product {
-    constructor(title, description, price, thumbnail, code, stock) {
+    constructor(title, description, price, thumbnails, code, stock, category) {
         this.title = title
         this.description = description
         this.price = price
-        this.thumbnail = thumbnail
+        this.thumbnails = thumbnails
         this.code = code
         this.stock = stock
+        this.status = true
+        this.category = category
     }
 }
 

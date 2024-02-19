@@ -14,7 +14,7 @@ app.get('/ping', (req, res) => {
 })
 
 app.use('/api/products', productsRouter);
-app.use('/api/cart', cartsRouter);
+app.use('/api/cart', cartsRouter); // Falta validar productos
 
 app.listen(PORT, () => {
     console.log(`Server run on port ${PORT}`);;
