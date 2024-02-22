@@ -1,3 +1,4 @@
+
 import express from 'express';
 import __dirname from './util.js';
 import handlebars from 'express-handlebars'
@@ -16,14 +17,14 @@ app.set('views', __dirname + '/views');
 
 app.use(express.static(__dirname + '/public/'))
 
-app.get('/hello', (req, res) => {
-    let testUser = {
-        name: "Alan",
-        last_name: "Barcos",
-        edad: 27
-    }
-    res.render('hello', testUser)
-})
+// app.get('/hello', (req, res) => {
+//     let testUser = {
+//         name: "Alan",
+//         last_name: "Barcos",
+//         edad: 27
+//     }
+//     res.render('hello', testUser)
+// })
 
 app.use('/api/hbs', viewRouter)
 

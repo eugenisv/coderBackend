@@ -1,29 +1,23 @@
 import express from 'express'
+import ProductManager from "../public/scripts/ProductManager.js";
 
 const router = express.Router();
 
-// Nuestra data
-let food = [
-    { name: "Hamburguesa", price: "100" },
-    { name: "Banana", price: "40" },
-    { name: "Soda", price: "20" },
-    { name: "Ensalada", price: "20" },
-    { name: "Pizza", price: "20" }
-];
+// crear productos (Base de datos)
 
-router.get("/user", (req, res) => {
-    let testUser = {
-        name: "Hilda",
-        last_name: "Martinez",
-        role: 'admin'
-    }
-    res.render("index",
+const productManager = new ProductManager
+productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnails: 'Sin imagen' , code: 'abc123', stock:25, category: "mula"})
+
+productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnails: 'Sin imagen' , code: '123', stock:5, category: "mula"})
+
+const products = productManager.getProducts()
+
+
+router.get("/", (req, res) => {
+    
+    res.render("home",
         {
-            user: testUser,
-            isAdmin: testUser.role === "admin",
-            // style: "index.css",
-            food
-
+            products
         })
 })
 
