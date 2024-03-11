@@ -1,15 +1,18 @@
+const { ifError } = require('assert')
+const { error } = require('console')
 const fs = require('fs')
 // crear directorio y archivo donde se guardará la info
 const dirName = './files' 
 const fileName = dirName + '/ejemplo.json'
 if(!fs.existsSync(dirName)) fs.mkdirSync(dirName)
 
-module.exports = class ProductManager { // gestiona un conjunto de productos
+class ProductManager { // gestiona un conjunto de productos
     constructor() {
         this.products = []
         this.path = fileName //debe recibir la ruta a trabajar desde el momento de generar su instancia.
     }
-    addProduct (product) {
+    addProduct(product)  {
+
         this.updateLocal()
         // valida que todos los campos sean obligatorios
         if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
@@ -69,11 +72,33 @@ module.exports = class ProductManager { // gestiona un conjunto de productos
         else console.error('No existe un producto con dicho ID')
     }
 
-    updateFile() {fs.writeFileSync(this.path, JSON.stringify(this.products))}
+    updateFile = async() => {
+        try {
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products), (error) => {
+                if (error) throw Error('No se puede escribir archivo en updateFile')
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    updateLocal() {
-        if(fs.existsSync(this.path)) this.products = JSON.parse(fs.readFileSync(this.path, 'utf-8'))
-        else fs.writeFileSync(this.path, JSON.stringify(this.products))
+    updateLocal = async() => {
+        try {
+            if(fs.existsSync(this.path)) {
+                await fs.promises.readFile(this.path, 'utf-8', (error, contenido) => {
+                    if (error) throw Error('Error al leer archivo en updateLocal')
+                    this.products =  JSON.parse(contenido)
+                })
+            }
+            else {
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), (error) => {
+                    if (error) throw Error('Error al escribir archivo en updateLocal')
+                })
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }
@@ -89,15 +114,23 @@ class Product {
     }
 }
 
+module.exports = ProductManager;
+
 //TESTING
 // const productManager = new ProductManager()
-// console.log(productManager.getProducts())
+// console.log("1",productManager.getProducts())
 // productManager.addProduct({title : 'producto prueba', description: 'Este es un producto prueba', price:200, thumbnail: 'Sin imagen' , code: 'abc123', stock:25})
-// console.log(productManager.getProducts())
+// console.log("2",productManager.getProducts())
+// console.log('3')
 // productManager.getProductById(0)
+// console.log('4')
 // productManager.getProductById(1)
+// console.log('5')
 // productManager.addProduct({title : 'producto prueba2', description: 'Este es un producto prueba2', price:200, thumbnail: 'Sin imagen' , code: '123', stock:5})
+// console.log('6')
 // productManager.updateProduct(0, 'code', 'NUEVO CÓDIGO')
+// console.log("6.5",productManager.getProducts())
+// console.log('7')
 // productManager.deleteProduct(1)
 
 
