@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductManager from "../ProductManager.js";
+import { socketServer } from "../app.js";
 
 const router = Router();
 
@@ -15,9 +16,9 @@ router.get('/', (req, res) => {
     const limit = req.query.limit;
     const productos = productManager.getProducts();
     const response = limit ? productos.slice(0, limit) : productos;
-    
-    res.json(response);
     res.render('home');
+    res.json(response);
+   
 })
 
 
@@ -34,8 +35,15 @@ router.get('/:pid', (req, res) => {
 
 router.post('/', (req, res)=> {
     let newProduct = req.body
-    productManager.addProduct(newProduct)
-    res.send({ status: "Success", msg: 'El producto ha sido añadido!' })
+    const added = productManager.addProduct(newProduct)
+    if (added) {
+        res.send({ status: "Success", msg: 'El producto ha sido añadido!' })
+        socketServer.emit('new-product', newProduct);
+    }
+    else {
+        res.send({ status: "Failure", msg: 'El producto NO ha sido añadido.' })
+    }
+   
 })
 
 router.put('/:pid', (req, res)=> {
@@ -50,6 +58,7 @@ router.put('/:pid', (req, res)=> {
             else productManager.updateProduct(req.params.pid, property, cambios[property])
         }
         res.send({ status: "Success", msg: 'Producto Actualizado!' })
+        socketServer.emit('update-product', productManager.getProductById(parseInt(req.params.pid)))
       }
     
     
@@ -63,6 +72,7 @@ router.delete('/:pid', (req, res)=> {
     else {
         productManager.deleteProduct(req.params.pid)
         res.send({ status: "Success", msg: 'Producto Eliminado!' })
+        socketServer.emit('del-product', product)
     }
    
 })

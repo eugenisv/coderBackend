@@ -1,47 +1,52 @@
 import fs from 'fs';
 // crear directorio y archivo donde se guardará la info
-const dirName = './files' 
-const fileName = dirName + '/productos.json'
-if(!fs.existsSync(dirName)) fs.mkdirSync(dirName)
+import __dirname from './util.js';
+const dirName = __dirname + '/files';
+const fileName = dirName + '/productos.json';
+if(!fs.existsSync(dirName)) fs.mkdirSync(dirName);
 
 class ProductManager { // gestiona un conjunto de productos
     constructor() {
-        this.products = []
-        this.path = fileName //debe recibir la ruta a trabajar desde el momento de generar su instancia.
+        this.products = [];
+        this.path = fileName; //debe recibir la ruta a trabajar desde el momento de generar su instancia.
     }
     addProduct (product) {
-        this.updateLocal()
+        this.updateLocal();
         // valida que todos los campos sean obligatorios
         if (!product.title || !product.description || !product.price || !product.code || !product.stock || !product.category) {
-            console.error("Todos los campos excepto thumbnails son obligatorios")
+            console.error("Todos los campos excepto thumbnails son obligatorios");
+            return false;
           }
         // valida que no se repita el campo code
-        if (this.products.some((p) => p.code === product.code)) {
-            console.error('Ya existe un producto con ese código')
+        else if (this.products.some((p) => p.code === product.code)) {
+            console.error('Ya existe un producto con ese código');
+            return false;
+
           }
         else { // Debe crearse con in id autoincrementable
-            product.id = this.products.length
-            if(!product.status) product.status = true
+            product.id = this.products.length;
+            if(!product.status) product.status = true;
             // agrega un producto al arreglo de productos inicial
-            this.products.push(product)
-            this.updateFile()
+            this.products.push(product);
+            this.updateFile();
+            return true;
        }
     }
     
     getProducts () { 
         // debe leer el archivo de productos y devolver todos los productos en formato de arreglo.
-        this.updateLocal()
-        return (this.products)
+        this.updateLocal();
+        return (this.products);
     }
 
     getProductById (idProduct) {
         // recibir un id, y tras leer el archivo, debe buscar el producto con el id especificado y devolverlo en formato objeto
-        this.updateLocal()
-        const found = this.products.find((p) => p.id === idProduct)
+        this.updateLocal();
+        const found = this.products.find((p) => p.id === idProduct);
         // si no coincide, mostrar en consola un error
-        found ? console.log(this.products[idProduct]) : console.error('No existe un producto con dicho ID')
+        found ? console.log(this.products[idProduct]) : console.error('No existe un producto con dicho ID');
         
-        return this.products[idProduct]
+        return this.products[idProduct];
     
     }
 
