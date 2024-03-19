@@ -1,6 +1,6 @@
 import fs from 'fs';
 // crear directorio y archivo donde se guardará la info
-const dirName = '../files' 
+const dirName = './files' 
 const fileName = dirName + '/productos.json'
 if(!fs.existsSync(dirName)) fs.mkdirSync(dirName)
 
