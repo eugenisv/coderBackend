@@ -1,9 +1,13 @@
 <div>
-    <h1>Productos con handlebars</h1>
-    {{#each}}
-    <div>
-        <p>Nombre: {{this.title}}</p>
-        <p>Precio: {{this.price}}</p>
-    </div>
+    <h1>Bienvenid@ a Madera Viva</h1>
+    <h2>Lista de productos</h2>
+  <ul>
+    {{#each products}}
+    <li>
+      <h2>{{this.title}}</h2>
+      <p>{{this.description}}</p>
+      <p>Precio: {{this.price}}</p>
+    </li>
     {{/each}}
+  </ul>
 </div>
