@@ -1,7 +1,7 @@
 import fs from 'fs';
-import __dirname from './util.js';
+import __dirname from '../util.js';
 // crear directorio y archivo donde se guardará la info
-const dirName = __dirname + '/files'
+const dirName = __dirname + '/dao'+ '/files';
 const fileName = dirName + '/carrito.json'
 if(!fs.existsSync(dirName)) fs.mkdirSync(dirName)
 
