@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const cartsCollection = 'carts';
 
 const cartSchema = new mongoose.Schema( {
-    products : Array,
+    products : [{ product: mongoose.Schema.Types.ObjectId, quantity: Number}],
     id : String
 })
 

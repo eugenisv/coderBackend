@@ -38,6 +38,10 @@ router.get('/realTimeProducts', async (req, res) => {
     }
 })
 
+router.get('/chat', (req, res) => {
+    res.render('chat', {})
+})
+
 // FS
 // const productManager = new ProductManager;
 // const products = productManager.getProducts()

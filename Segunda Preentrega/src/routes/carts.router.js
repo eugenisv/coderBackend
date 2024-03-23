@@ -1,6 +1,6 @@
 import { Router } from "express";
-import CartManager from "../dao/CartManager.js";
-import ProductManager from "../dao/ProductManager.js";
+//import CartManager from "../dao/CartManager.js"; //FileSystem
+//import ProductManager from "../dao/ProductManager.js";
 
 import { cartModel } from "../dao/models/carts.model.js";
 import { productModel } from "../dao/models/product.model.js";
@@ -37,17 +37,12 @@ router.post('/:cid/product/:pid', async (req, res)=> {
         const cid = req.params.cid;
         const cart = await cartModel.findById(cid);
         const toAddProduct = await productModel.findById(pid);
-        console.log(cart, toAddProduct);
         const encontrado = cart.products.find( p => p.product.equals(toAddProduct._id));
-        console.log(encontrado)
         if (encontrado) {
-            console.log(encontrado) //{ product: new ObjectId('65fc4a804eeb5b499fedf6b8'), quantity: 1 }
             encontrado.quantity++;
-            console.log(encontrado) //{ product: new ObjectId('65fc4a804eeb5b499fedf6b8'), quantity: 2 }
         }
         else {
             let newProduct = {product : toAddProduct._id, quantity : 1}
-            console.log(newProduct)
             cart.products.push(newProduct)  
         } 
         await cart.save() 
@@ -55,19 +50,6 @@ router.post('/:cid/product/:pid', async (req, res)=> {
     } catch (error) {
         res.status(500).send({status: "failure", message: 'Hubo un error al obtener carrito o producto por ID ' + error})
     }
-
-    
-    // if (!product) {
-    //     res.status(404).send(`Producto con id "${newProductId}" no encontrado`);
-    // }
-    // else if (!cart) {
-    //     res.status(404).send(`Carrito con id "${cartId}" no encontrado`);
-    // }
-    // else {
-    //     cartManager.addProdinCart(cartId, newProductId);
-    //     res.send({ status: "Success", msg: 'El producto fue añadido al carrito' })
-    // }
-   
 })
 
 //CODIGO VIEJO
