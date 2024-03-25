@@ -8,13 +8,11 @@ const router = Router();
 //ROUTER MONGO
 router.get('/', async (req, res) => {
     try {
-        let productos = await productModel.find()
-        const limit = req.query.limit;
-        const response = limit ? productos.slice(0, limit) : productos;
+        const response = await getProductsParams(req.query.limit, req.query.page, req.query.sort, req.query.query)
         res.json(response);
     } catch (error) {
         console.error('No se pudo obtener los productos desde Mongoose' + error)
-        res.status(500).send({error: 'No se pudo obtener la base de datos de Productos en Mongoose', message: error})
+        res.status(500).send({'status': 'No se pudo obtener la base de datos de Productos en Mongoose', 'message' : error})
 
     }
 })
@@ -76,6 +74,49 @@ router.delete('/:pid', async (req, res)=> {
     }
 })
 
+//FUNCIONES
+export async function getProducts () {
+    try {
+        const products = await productModel.find().lean();
+        return products;
+    } catch (error) {
+        console.error('No se puede obtener los productos con Mongoose en getProducts()', error);
+    }
+}
+
+export async function getProductsParams (qlimit, qqpage, qsort, qquery) {
+    try {
+        // valores por default
+        const dlimit = 3;
+        const dpage = 1;
+        // asignación de valores
+        const limit = qlimit ? parseInt(qlimit) : dlimit;
+        const qpage = qqpage ? parseInt(qqpage) : dpage;
+        const sort = qsort? {price: qsort} : {};
+        const query = qquery ? {category : qquery} : {};
+        let productos = await productModel.paginate(query,{limit : limit, page: qpage, sort : sort, lean : true})
+        const {docs, totalPages, page,  hasPrevPage, hasNextPage, prevPage, nextPage} = productos
+        const response = {
+                            status : 'success', 
+                            payload : docs, 
+                            totalPages : totalPages, 
+                            prevPage : prevPage, 
+                            nextPage : nextPage,
+                            page : page,
+                            hasPrevPage : hasPrevPage,
+                            hasNextPage : hasNextPage,
+                        };
+        // res.json(response);
+       return response;
+    } catch (error) {
+        console.error('No se pudo obtener los productos desde Mongoose' + error)
+        res.status(500).send({'status': 'No se pudo obtener la base de datos de Productos en Mongoose', 'message' : error})
+
+    }
+}
+
+
+
 //ROUTER ORIGINAL FILESYSTEM
 // const productManager = new ProductManager
 
@@ -134,3 +175,5 @@ router.delete('/:pid', async (req, res)=> {
 // })
 
 export default router;
+
+
