@@ -1,19 +1,31 @@
 import express from 'express';
 import {engine} from 'express-handlebars';
+
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
+
 import __dirname from './util.js';
 import viewsRowter from './routes/views.router.js'
 import { Server } from "socket.io";
 import mongoose from 'mongoose';
 import { messagesModel } from './dao/models/messages.model.js';
 
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import FileStore from 'session-file-store';
+import MongoStore from 'connect-mongo';
+import usersViewRouter from './routes/users.views.router.js';
+import sessionsRouter from './routes/sessions.router.js';
+
 
 const app = express();
 const PORT = 8080;
+const URL_MONGO = 'mongodb+srv://eugenisv:Lh6rbesFrHdMXrHe@cluster0.q1kvm6e.mongodb.net/ecommerce?retryWrites=true&w=majority';
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended : true}));
+app.use(cookieParser('RJ4vg/@ctuB2W2&'))
 
 
 app.engine('handlebars', engine());
@@ -22,9 +34,24 @@ app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public/'));
 
+
+const fileStorage = FileStore(session);
+
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: URL_MONGO,
+        mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
+        ttl: 60
+    }),
+    secret: "coderS3cr3t",
+    resave: false,
+    saveUninitialized: true,
+}));
 app.use('/', viewsRowter) 
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartsRouter);
+app.use('/users', usersViewRouter);
+app.use('/api/sessions', sessionsRouter)
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Server run on port ${PORT}`);
@@ -67,7 +94,6 @@ socketServer.on('connection', async socket => {
 
 
 // Mongo DB
-const URL_MONGO = 'mongodb+srv://eugenisv:Lh6rbesFrHdMXrHe@cluster0.q1kvm6e.mongodb.net/ecommerce?retryWrites=true&w=majority';
 const connectMongoDB = async () => {
     try {
         mongoose.connect(URL_MONGO);

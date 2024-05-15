@@ -3,22 +3,33 @@ import { productModel } from "../dao/models/product.model.js";
 import { getProductsParams } from './products.router.js';
 import { getProducts } from './products.router.js';
 import { cartModel } from '../dao/models/carts.model.js';
-import cookieParser from 'cookie-parser';
 
 //Filesystem
 // import ProductManager from "../dao/ProductManager.js";
 // const productManager = new ProductManager;
 
 const router = express.Router();
-router.use(cookieParser());
+
+router.get('/session', (req, res) => {
+    if(req.session.counter) {
+        req.session.counter++;
+        res.send(`Se ha visitado este sitio ${req.session.counter} veces.`);
+    }
+    else {
+        req.session.counter = 1;
+        res.send('Bienvenid@');
+    }
+})
 
 router.get('/setcookie', (req, res) =>{
-    try {
-        res.cookie('CoderCookie', 'Se crea una cookie', { maxAge: 3000 }).send('Cookie');
-    } catch (error) {
-        console.log(error)
-    }
-    
+
+    res.cookie('CoderCookie', 'Se crea una cookie', { maxAge: 10000 , signed : true}).send('Cookie');
+})
+
+
+router.get('/getcookie', (req, res) =>{
+
+    res.send(req.signedCookies);
 })
 
 router.get('/products', async (req, res) => {
