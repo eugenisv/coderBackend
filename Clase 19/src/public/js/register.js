@@ -18,5 +18,12 @@ form.addEventListener('submit', e => {
         if (result.status === 200) {
             window.location.replace('/users/login')
         }
+        else if (result.status === 400) {
+            Swal.fire({
+                icon: "error",
+                title: "Información incompleta",
+                text: "No has rellenado todos los campos",
+              });
+        }
     })
 })

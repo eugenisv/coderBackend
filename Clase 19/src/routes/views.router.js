@@ -37,7 +37,8 @@ router.get('/products', async (req, res) => {
         const response = await getProductsParams(req.query.limit, req.query.page, req.query.sort, req.query.query);
         response.prevLink = response.hasPrevPage ? `http://localhost:8080/products?page=${response.prevPage}`: null;
         response.nextLink = response.hasNextPage ? `http://localhost:8080/products?page=${response.nextPage}`: null;
-        res.render('products', response)
+        const obj = {response, session: req.session}
+        res.render('products', obj)
 
     } catch (error) {
         console.error('Error en GET/, no se pueden obtener productos' + error)

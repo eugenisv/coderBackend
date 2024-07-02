@@ -8,6 +8,7 @@ form.addEventListener('submit', e => {
     const obj = {}
 
     data.forEach((value, key) => obj[key] = value);
+    
     fetch( '/api/sessions/login', {
         method: 'POST',
         body: JSON.stringify(obj),
@@ -16,7 +17,21 @@ form.addEventListener('submit', e => {
         }
     }).then(result => {
         if (result.status === 200) {
-            window.location.replace('/users')
+            window.location.replace('/products')
+        }
+        else if (result.status === 400) {
+            Swal.fire({
+                icon: "error",
+                title: "Debes llenar todos los campos",
+              });
+        }
+        else if (result.status === 401) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Credenciales incorrectas",
+                footer: '¿No estás registrado? <a href="/users/register">Regístrate aquí</a></p>'
+              });
         }
     })
 })

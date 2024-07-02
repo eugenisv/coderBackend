@@ -1,11 +1,13 @@
 import { Router } from "express";
 import userModel from "../dao/models/user.model.js";
+import { isValidPassword } from "../util.js";
 
 const router = Router();
 
 router.post('/register', async (req, res) => {
     try {
         const {first_name, last_name, email, age, password} = req.body;
+        if (!first_name || !last_name || !email || !age || !password) return res.status(400).send({ status: 'error', message: 'No se han completado todos los campos'})
         console.log('Registrando Usuario');
         console.log(req.body);
 
@@ -19,7 +21,7 @@ router.post('/register', async (req, res) => {
             last_name,
             email,
             age,
-            password
+            password: createHash(password)
         }
 
         const result = await userModel.create(user);
@@ -34,8 +36,10 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const {email, password} = req.body;
-    const user = await userModel.findOne({email, password});
+    if(!email || !password) return res.status(400).send({status: "error", error: "No se han llenado todos los campos"});
+    const user = await userModel.findOne({email: email}, {email: 1, first_name: 1, last_name: 1, password: 1});
     if (!user) return res.status(401).send({status: 'error', error: 'Credenciales incorrectas'});
+    if(!isValidPassword(user, password)) return res.status(403).send({status: "error", error: "Email o contraseña"})
     req.session.user = {
         name:  `${user.first_name} ${user.last_name}`,
         email: user.email,
