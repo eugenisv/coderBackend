@@ -8,7 +8,12 @@ form.addEventListener('submit', e => {
     const obj = {}
 
     data.forEach((value, key) => obj[key] = value);
-    
+    if (!obj.email || !obj.password) {
+        Swal.fire({
+            icon: "error",
+            title: "Debes llenar todos los campos",
+          });
+    }
     fetch( '/api/sessions/login', {
         method: 'POST',
         body: JSON.stringify(obj),
@@ -18,12 +23,6 @@ form.addEventListener('submit', e => {
     }).then(result => {
         if (result.status === 200) {
             window.location.replace('/products')
-        }
-        else if (result.status === 400) {
-            Swal.fire({
-                icon: "error",
-                title: "Debes llenar todos los campos",
-              });
         }
         else if (result.status === 401) {
             Swal.fire({

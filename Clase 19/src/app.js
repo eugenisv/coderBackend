@@ -17,6 +17,9 @@ import MongoStore from 'connect-mongo';
 import usersViewRouter from './routes/users.views.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 
+// PASSPORT
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
 
 const app = express();
 const PORT = 8080;
@@ -45,8 +48,14 @@ app.use(session({
     }),
     secret: "coderS3cr3t",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: true, // Estaba en true
 }));
+
+// PASSPORT
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', viewsRowter) 
 app.use('/api/products', productsRouter);
 app.use('/api/cart', cartsRouter);
