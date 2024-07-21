@@ -21,9 +21,10 @@ import sessionsRouter from './routes/sessions.router.js';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 
+import config from './config/config.js';
 const app = express();
-const PORT = 8080;
-const URL_MONGO = 'mongodb+srv://eugenisv:Lh6rbesFrHdMXrHe@cluster0.q1kvm6e.mongodb.net/ecommerce?retryWrites=true&w=majority';
+const PORT = config.port;
+const URL_MONGO = config.mongoUrl;
 
 
 app.use(express.json());
@@ -64,6 +65,7 @@ app.use('/api/sessions', sessionsRouter)
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Server run on port ${PORT}`);
+    console.log(process.argv);
 })
 
 // Socket.io

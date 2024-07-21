@@ -14,7 +14,11 @@ const schema = new mongoose.Schema({
         type: String,
         default: 'user' 
       },
-    password: String
+    password: String,
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "carts"
+    },
 })
 
 // Codigo usado para crear el rol de admin

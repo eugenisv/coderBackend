@@ -1,14 +1,21 @@
-<div>
-    <h1>Login</h1>
-    <form id="loginForm">
-        <label>Email</label>
-        <input name="email">
-        <br />
-        <label>Contraseña</label>
-        <input type="password" name="password">
-        <input type="submit">
-    </form>
-    <p>¿No estás registrado? <a href="/users/register">Regístrate aquí</a></p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h1 class="text-center mb-4">Login</h1>
+      <form id="loginForm" class="mb-3">
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" class="form-control" id="email" name="email" placeholder="usuario@mail.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="*********">
+        </div>
+        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+      </form>
+      <p class="text-center">¿No estás registrado? <a href="/users/register">Regístrate aquí</a></p>
+    </div>
+  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/login.js"></script>
