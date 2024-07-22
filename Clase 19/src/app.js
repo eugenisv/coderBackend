@@ -1,27 +1,31 @@
 import express from 'express';
 import {engine} from 'express-handlebars';
+import config from './config/config.js';
+import MongoSingleton from './config/mongodb-singleton.js';
 
+// Routers
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
+import viewsRowter from './routes/views.router.js';
+import usersViewRouter from './routes/users.views.router.js';
+import sessionsRouter from './routes/sessions.router.js';
 
 import __dirname from './util.js';
-import viewsRowter from './routes/views.router.js'
+
 import { Server } from "socket.io";
-import mongoose from 'mongoose';
 import { messagesModel } from './dao/models/messages.model.js';
 
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import FileStore from 'session-file-store';
 import MongoStore from 'connect-mongo';
-import usersViewRouter from './routes/users.views.router.js';
-import sessionsRouter from './routes/sessions.router.js';
+
 
 // PASSPORT
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 
-import config from './config/config.js';
+
 const app = express();
 const PORT = config.port;
 const URL_MONGO = config.mongoUrl;
@@ -102,20 +106,29 @@ socketServer.on('connection', async socket => {
 
 })
 
+// SINGLETON
 
-
-// Mongo DB
-const connectMongoDB = async () => {
+const mongoInstance =  async () => {
     try {
-        mongoose.connect(URL_MONGO);
-        console.log('Se conectó exitosamente a MongoDB usando Mongoose');
-        
+        await MongoSingleton.getInstance();
     } catch (error) {
-        console.error('No se pudo conectar a la base en Mongoose' + error);
-        process.exit();
+        console.log(error);
     }
 }
+mongoInstance();
 
-connectMongoDB();
+// Mongo DB
+// const connectMongoDB = async () => {
+//     try {
+//         mongoose.connect(URL_MONGO);
+//         console.log('Se conectó exitosamente a MongoDB usando Mongoose');
+        
+//     } catch (error) {
+//         console.error('No se pudo conectar a la base en Mongoose' + error);
+//         process.exit();
+//     }
+// }
+
+//connectMongoDB();
 export { socketServer };
 
