@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Tu perfil</h1>
+      {{#if user.name}}
+        <p class="lead">{{user.name}}</p>
+        <p><span class="fas fa-envelope-square"></span> {{user.email}}</p>
+        <p><span class="fas fa-birthday-cake"></span> Edad: {{user.age}}</p>
+      {{else}}
+        <p class="alert alert-danger">Debes iniciar sesión para ver tu perfil.</p>
+        <a href="/users/login" class="btn btn-primary">Iniciar sesión</a>
+      {{/if}}
+    </div>
+    <div class="col-md-6">
+      </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div>
+    <h1>Lista de Productos -Trabajando con WebSocket</h1>
+    <ul id="lista-productos">
+    {{#each products}}
+    <li id="prod-{{this._id}}">
+      <h2>{{this.title}}</h2>
+      <p>{{this.description}}</p>
+      <p>Precio: {{this.price}}</p>
+    </li>
+    {{/each}}
+  </ul>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
