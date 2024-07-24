@@ -1,81 +1,25 @@
 import { Router } from "express";
 // import ProductManager from "../dao/ProductManager.js";  // FileSystem
-import { socketServer } from "../app.js";
+//import { socketServer } from "../app.js"; YA NO SE USA
 import { productModel } from "../dao/models/product.model.js";
+import {getProductsParams, getProductById, createNewProduct, updateProduct, deleteProduct} from '../controllers/products.controller.js';
 
 const router = Router();
 
 //ROUTER MONGO
-router.get('/', async (req, res) => {
-    try {
-        const response = await getProductsParams(req.query.limit, req.query.page, req.query.sort, req.query.query)
-        res.json(response);
-    } catch (error) {
-        console.error('No se pudo obtener los productos desde Mongoose' + error)
-        res.status(500).send({'status': 'No se pudo obtener la base de datos de Productos en Mongoose', 'message' : error})
+router.get('/', getProductsParams);
+router.get('/:pid', getProductById);
+router.post('/', createNewProduct);
+router.put('/:pid', updateProduct);
+router.delete('/:pid', deleteProduct);
 
-    }
-})
-
-router.get('/:pid', async (req, res) => {
-    try {
-        const pid = req.params.pid;
-        const product = await productModel.find({_id : {$eq: pid}});
-        console.log(product)
-        if (product.acknowledged !== false)   {
-            res.json(product);
-        }
-        else  res.status(404).send({status: "failure", message: 'Producto no encontrado', payload: product});
-    } catch (error) {
-        console.error('No se pudo obtener producto con ID')
-        res.status(404).send({status: "failure", message: 'No se pudo obtener la base de datos con Mongoose' + error});
-    }
-});
-
-router.post('/', async (req, res)=> {
-    try {
-        let newProduct = req.body
-        const products = await productModel.create(newProduct)
-        res.send({ status: "Success", msg: 'El producto ha sido añadido!', payload: products})
-        socketServer.emit('new-product', products);
-    } catch (error) {
-        res.send({ status: "Failure", msg: 'El producto NO ha sido añadido a Mongoos '+ error, "error":  error })
-
-    }
-})
-
-router.put('/:pid', async (req, res)=> {
-    try {
-        let cambios = req.body
-        const confirm = await productModel.updateOne({_id: req.params.pid}, cambios);
-        const added = confirm.acknowledged !== false;
-        if (!added)  res.send({ status: "Failure", msg: 'El producto NO ha sido añadido a Mongoose ' + JSON.stringify(confirm)})
-        else {
-            const updatedProduct = await productModel.find({_id: {$eq: req.params.pid}}).lean()
-            res.send({ status: "Success", msg: 'Producto Actualizado!', payload : updatedProduct });
-            socketServer.emit('update-product', updatedProduct)
-        }
-       
-    } catch (error) {
-        res.send({ status: "Failure", msg: 'El producto NO ha sido añadido a Mongoose ' + error })
-    }
-    
-})
-
-router.delete('/:pid', async (req, res)=> {
-    try {
-        const delProduct = await productModel.find({_id: {$eq: req.params.pid}}).lean();
-        const confirm = await productModel.deleteOne({_id: req.params.pid});
-        console.log(delProduct, typeof(delProduct))
-        res.send({ status: "Success", msg: 'Producto Eliminado!', deleted : delProduct, payload: confirm});
-        socketServer.emit('del-product', delProduct)
-    }   catch (error) {
-        res.send({ status: "Failure", msg: 'El producto NO ha sido eliminado con Mongoose ' + error });
-    }
-})
+// router.get('/categories/:category', getProductsByCategory)
+// router.get('/:pid', getSortedProductsByPrice)
+//PUEDE NO SER NECESARIO SOLO CON GETPRODUCTSPARAMS Y UNA BUENA IMPLEMENTACION EN LINKS
 
 //FUNCIONES
-export async function getProducts () {
+
+export async function getProducts () { //EN EL PRODUCT MANAGER, NO SE USA ACA
     try {
         const products = await productModel.find().lean();
         return products;
@@ -84,38 +28,39 @@ export async function getProducts () {
     }
 }
 
-export async function getProductsParams (qlimit, qqpage, qsort, qquery) {
-    try {
-        // valores por default
-        const dlimit = 3;
-        const dpage = 1;
-        // asignación de valores
-        const limit = qlimit ? parseInt(qlimit) : dlimit;
-        const qpage = qqpage ? parseInt(qqpage) : dpage;
-        const sort = qsort? {price: qsort} : {};
-        const query = qquery ? {category : qquery} : {};
-        let productos = await productModel.paginate(query,{limit : limit, page: qpage, sort : sort, lean : true})
-        const {docs, totalPages, page,  hasPrevPage, hasNextPage, prevPage, nextPage} = productos
-        const response = {
-                            status : 'success', 
-                            payload : docs, 
-                            totalPages : totalPages, 
-                            prevPage : prevPage, 
-                            nextPage : nextPage,
-                            page : page,
-                            hasPrevPage : hasPrevPage,
-                            hasNextPage : hasNextPage,
-                        };
-        // res.json(response);
-       return response;
-    } catch (error) {
-        console.error('No se pudo obtener los productos desde Mongoose' + error)
-        res.status(500).send({'status': 'No se pudo obtener la base de datos de Productos en Mongoose', 'message' : error})
+// EN EL VIEWS ROUTER Y ACA
+// export async function getProductsParams (qlimit, qqpage, qsort, qquery) {
+//     try {
+//         // valores por default
+//         const dlimit = 3;
+//         const dpage = 1;
+//         // asignación de valores
+//         const limit = qlimit ? parseInt(qlimit) : dlimit;
+//         const qpage = qqpage ? parseInt(qqpage) : dpage;
+//         const sort = qsort? {price: qsort} : {};
+//         const query = qquery ? {category : qquery} : {};
+//         let productos = await productModel.paginate(query,{limit : limit, page: qpage, sort : sort, lean : true})
+//         const {docs, totalPages, page,  hasPrevPage, hasNextPage, prevPage, nextPage} = productos
+//         const response = {
+//                             status : 'success', 
+//                             payload : docs, 
+//                             totalPages : totalPages, 
+//                             prevPage : prevPage, 
+//                             nextPage : nextPage,
+//                             page : page,
+//                             hasPrevPage : hasPrevPage,
+//                             hasNextPage : hasNextPage,
+//                         };
+//         // res.json(response);
+//        return response;
+//     } catch (error) {
+//         console.error('No se pudo obtener los productos desde Mongoose' + error)
+//         res.status(500).send({'status': 'No se pudo obtener la base de datos de Productos en Mongoose', 'message' : error})
 
-    }
-}
+//     }
+// }
 
-
+export default router;
 
 //ROUTER ORIGINAL FILESYSTEM
 // const productManager = new ProductManager
@@ -174,6 +119,6 @@ export async function getProductsParams (qlimit, qqpage, qsort, qquery) {
    
 // })
 
-export default router;
+
 
 

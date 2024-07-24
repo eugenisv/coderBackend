@@ -1,15 +1,42 @@
-<div>
-    <div>
-        <h1>Productos en Carrito</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Productos en Carrito</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Descripción</th>
+            <th>Precio Unitario</th>
+            <th>Cantidad</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each products}}
+          <tr>
+            <td>{{this.product.title}}</td>
+            <td>{{this.product.description}}</td>
+            <td>{{this.product.price}}</td>
+            <td>{{this.quantity}}</td>
+            
+            <td><button class="btn btn-danger btn-sm">Eliminar</button></td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Total</h5>
+              <p class="card-text">Total a pagar: {{total}}</p>
+              <button class="btn btn-primary btn-block">Proceder al pago</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div>
-        {{#each products}}
-            <h2>{{this.product.title}}</h2>
-            <p>{{this.product.description}}</p>
-            <p>Precio Unitario: {{this.product.price}}</p>
-            <p>Cantidad en carrito: {{this.quantity}}</p>
-            <button>Eliminar del carrito</button>
-        {{/each}}
-    </div>
+  </div>
 </div>

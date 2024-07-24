@@ -1,14 +1,24 @@
 import { Router } from "express";
 //import CartManager from "../dao/CartManager.js"; //FileSystem
 //import ProductManager from "../dao/ProductManager.js";
+import { createNewCart, getCartById, updateCart, addProductToCart, deleteProductFromCart, deleteCart } from "../controllers/carts.controller.js";
 
 import { cartModel } from "../dao/models/carts.model.js";
+
 import { productModel } from "../dao/models/product.model.js";
 
 
 const router = Router();
 
 //MONGO
+router.post('/', createNewCart)
+router.get('/:cid', getCartById)
+router.put('/:cid', updateCart)
+router.post('/:cid/product/:pid', addProductToCart)
+router.delete('/:cid/product/:pid', deleteProductFromCart)
+router.delete('/:cid', deleteCart)
+
+
 router.post('/', async (req,res)=> {
     try {
         const newCart = await cartModel.create({products : []})
