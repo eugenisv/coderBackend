@@ -29,8 +29,9 @@ export const getProdIdViews = async (req, res) => {
 
 export const getCartIdViews = async (req, res) => {
     try {
-        const products = await cartService.getById(req.params.cid);
-        if (products)   {
+        const cart = await cartService.getById(req.params.cid);
+        if (cart)   {
+            const products = cart.products;
             res.render('cart', {products});
         } 
         else  res.render("404");
