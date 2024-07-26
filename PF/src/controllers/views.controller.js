@@ -1,5 +1,5 @@
-import ProductService from "../services/db/products.dao.js";
-import CartService from "../services/db/carts.dao.js";
+import ProductService from "../services/db/dao/products.dao.js";
+import CartService from "../services/db/dao/carts.dao.js";
 const productService = new ProductService();
 const cartService = new CartService();
 

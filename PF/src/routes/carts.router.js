@@ -3,7 +3,6 @@ import { Router } from "express";
 //import ProductManager from "../dao/ProductManager.js";
 import { createNewCart, getCartById, updateCart, addProductToCart, productQuantityCart, deleteProductFromCart, deleteCart } from "../controllers/carts.controller.js";
 
-import { cartModel } from "../dao/models/carts.model.js";
 
 
 const router = Router();

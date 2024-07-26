@@ -13,7 +13,7 @@ import sessionsRouter from './routes/sessions.router.js';
 import __dirname from './util.js';
 
 import { Server } from "socket.io";
-import { messagesModel } from './dao/models/messages.model.js';
+import { messagesModel } from './services/db/models/messages.model.js';
 
 import cookieParser from 'cookie-parser';
 import session from 'express-session';

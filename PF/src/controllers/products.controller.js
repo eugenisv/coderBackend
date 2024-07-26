@@ -1,4 +1,4 @@
-import ProductService from "../services/db/products.dao.js";
+import ProductService from "../services/db/dao/products.dao.js";
 import { socketServer } from "../app.js";
 
 const productService = new ProductService();

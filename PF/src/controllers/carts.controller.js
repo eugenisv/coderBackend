@@ -1,4 +1,4 @@
-import CartService from "../services/db/carts.dao.js";
+import CartService from "../services/db/dao/carts.dao.js";
 
 const cartService = new CartService();
 export async function createNewCart(req, res) {

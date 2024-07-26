@@ -1,6 +1,6 @@
 import fs from 'fs';
 // crear directorio y archivo donde se guardará la info
-import __dirname from '../util.js';
+import __dirname from '../../util.js';
 const dirName = __dirname + '/dao'+ '/files';
 const fileName = dirName + '/productos.json';
 if(!fs.existsSync(dirName)) fs.mkdirSync(dirName);
